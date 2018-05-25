@@ -3,6 +3,7 @@ import time
 import string
 import os
 import subprocess
+import mraa
 
 from datetime import datetime
 
@@ -10,6 +11,8 @@ import APP_Harvard_TX_Prototype_config as Conf
 
 fields = Conf.fields
 values = Conf.values
+
+global solenoid_flag
 
 def upload_data():
 	CSV_items = ['device_id','date','time','s_t0','s_h0','s_d0','s_d1','s_d2','s_gg','s_g8e']
@@ -133,6 +136,12 @@ if __name__ == '__main__':
 	disp = Conf.upmLCD.SSD1306(0, 0x3C)
 	disp.clear()
 
+	#here is something for prototype
+	solenoid_flag = 0
+	pin = mraa.Gpio(2)  
+	pin.dir(mraa.DIR_OUT)
+	pin.write(0)
+
 	count = 0
         values["s_d0"] = 0                                                                                                                                  
         values["s_d1"] = 0                                                                                                                                  
@@ -191,6 +200,14 @@ if __name__ == '__main__':
 		count = count + 1
 		count = count % (Conf.Restful_interval / Conf.Interval_LCD)
 		time.sleep(Conf.Interval_LCD)
+
+		if solenoid_flag > 180:
+			pin.write(1)
+		if solenoid_flag > 360:
+			pin.write(0)
+			solenoid_flag = 0
+
+		solenoid_flag = solenoid_flag + 5 
 		
 
 					

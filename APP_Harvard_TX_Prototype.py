@@ -201,9 +201,9 @@ if __name__ == '__main__':
 		count = count % (Conf.Restful_interval / Conf.Interval_LCD)
 		time.sleep(Conf.Interval_LCD)
 
-		if solenoid_flag > 60:
+		if solenoid_flag > 300:
 			pin.write(1)
-		if solenoid_flag > 89:
+		if solenoid_flag > 599:
 			pin.write(0)
 			solenoid_flag = 0
 
